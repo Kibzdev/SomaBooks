@@ -12,6 +12,7 @@ const {
   },
 } = config;
 
+
 const authenticator = async () => {
   try {
     const response = await fetch(`${config.env.apiEndpoint}/api/auth/imagekit`);
@@ -19,26 +20,23 @@ const authenticator = async () => {
       const errorText = await response.text();
 
       throw new Error(
-        `Request failed with status ${response.status}: ${errorText}`
+        `Request failed with status ${response.status}: ${errorText}`,
       );
     }
 
     const data = await response.json();
-
-    const { signature, expire, token } = data;
+    const { signature, expire, token } = data; 
     return { token, expire, signature };
   } catch (error: any) {
     throw new Error(`Authentication request failed: ${error.message}`);
   }
 };
 
-const ImageUpload = ({
-  onFileChange,
-}: {
-  onFileChange: (filePath: string) => void;
+const ImageUpload = ({onFileChange }: { onFileChange: (filePath: string) => void;
 }) => {
   const ikUploadRef = useRef(null);
-  const [file, setFile] = useState<{ filepath: string } | null>(null);
+  const [file, setFile] = useState<{ filePath: string } | null>(null);
+
   const onError = (error: any) => {
     toast({
       title: "Image uploaded failed",
@@ -68,15 +66,16 @@ const ImageUpload = ({
         onError={onError}
         onSuccess={onSuccess}
         fileName="test-upload.png"
+        className="hidden"
+
       />
       <button
         className="upload-btn"
         onClick={(e) => {
           e.preventDefault();
-
-          if (ikUploadRef.current) {
+          if(ikUploadRef.current) {
             // @ts-expect-error for now
-            ikUploadRef.current.click();
+            ikUploadRef.current?.click();
           }
         }}
       >
@@ -88,13 +87,13 @@ const ImageUpload = ({
           className="object-contain"
         />
         <p className="text-base text-light-100">Upload a File</p>
-        {file && <p className="upload-filename">{file.filepath}</p>}
+        {file && <p className="upload-filename">{file.filePath}</p>}
       </button>
 
       {file && (
         <IKImage
-          alt={file.filepath}
-          path={file.filepath}
+          alt={file.filePath}
+          path={file.filePath}
           width={500}
           height={300}
         />

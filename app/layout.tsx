@@ -1,10 +1,12 @@
-// app/layout.tsx
+ // app/layout.tsx
 // import type { Metadata } from "next";
 import { Metadata } from 'next';
 import "./globals.css";
 import { ReactNode } from "react";
 import localFont from "next/font/local";
 import { Toaster } from "@/components/ui/toaster"
+import { SessionProvider } from "next-auth/react";
+import { auth } from '../auth';
 
 
 const ibmPlexSans = localFont  ({
@@ -29,15 +31,20 @@ export const metadata: Metadata = {
     "SomaBooks is a book borrowing university library management solution.",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+const RootLayout = async ({ children }: { children: ReactNode }) => {
+  const session = await auth()
+  
   return (
     <html lang="en">
+     <SessionProvider  session={session}>
       <body
           className={`${ibmPlexSans.className} ${bebasNeue.variable} antialiased`}>
         {children}
 
         <Toaster />
       </body>
+      </SessionProvider>
     </html>
   );
-}
+};
+export default RootLayout;
