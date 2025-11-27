@@ -1,6 +1,6 @@
 "use client";
 
-import { IKImage, ImageKitProvider, IKUpload, } from "imagekitio-next";
+import { IKImage, ImageKitProvider, IKUpload } from "imagekitio-next";
 import config from "../lib/config";
 import { useRef, useState } from "react";
 import Image from "next/image";
@@ -12,27 +12,29 @@ const {
   },
 } = config;
 
-
 const authenticator = async () => {
   try {
-    const response = await fetch(`/api/auth/imagekit`);
+    const response = await fetch("/api/auth/imagekit");
     if (!response.ok) {
       const errorText = await response.text();
 
       throw new Error(
-        `Request failed with status ${response.status}: ${errorText}`,
+        `Request failed with status ${response.status}: ${errorText}`
       );
     }
 
     const data = await response.json();
-    const { signature, expire, token } = data; 
+    const { signature, expire, token } = data;
     return { token, expire, signature };
   } catch (error: any) {
     throw new Error(`Authentication request failed: ${error.message}`);
   }
 };
 
-const ImageUpload = ({onFileChange }: { onFileChange: (filePath: string) => void;
+const ImageUpload = ({
+  onFileChange,
+}: {
+  onFileChange: (filePath: string) => void;
 }) => {
   const ikUploadRef = useRef(null);
   const [file, setFile] = useState<{ filePath: string } | null>(null);
@@ -67,13 +69,12 @@ const ImageUpload = ({onFileChange }: { onFileChange: (filePath: string) => void
         onSuccess={onSuccess}
         fileName="test-upload.png"
         className="hidden"
-
       />
       <button
         className="upload-btn"
         onClick={(e) => {
           e.preventDefault();
-          if(ikUploadRef.current) {
+          if (ikUploadRef.current) {
             // @ts-expect-error for now
             ikUploadRef.current?.click();
           }
