@@ -1,8 +1,8 @@
 import React from 'react'
 import { signOut } from '../../../auth';
-import { sampleBooks } from '../../../constants';
 import BookList from '../../../components/BookList';
 import { Button } from '../../../components/ui/button';
+import { sampleBooks } from "@/constants";
 
 const page = () => {
   return (
